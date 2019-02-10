@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <iostream>
 
 class Magic
 {
@@ -75,12 +76,12 @@ void Magic::alg()
     col = (degree - 1);
     
     for(s=0; s < n; s++)
-        tab[row+s][col-s] = M;   //заполняем главную диагональ
+        tab[row-s][col-s] = M;   //заполняем главную диагональ
     
     for (p=degree-1; p>0; p--) //заполняем остальные диагонали
         for(s=0; s < n; s++)
         {
-            i = row+s+1;
+            i = row-s+1;
             j = col-s;
             reflect(i);
             reflect(j);
@@ -89,13 +90,16 @@ void Magic::alg()
             tab[i][j]=p;
             
         }
+    row++;
 }
 
 int main(int argc, char* argv[])
 {
+    int n;
+    std::cin >> n;
     if(argc != 2)
         return(puts("Usage: magic degree"));
-    int n = atoi(argv[1]);
+    n = atoi(argv[1]);
     if((n % 2) == 0)
     {
         puts("Usage: magic 5 (or 7, 11, 17, ...)");
