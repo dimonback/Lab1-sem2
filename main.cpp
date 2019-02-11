@@ -66,19 +66,19 @@ int Magic::reflect(int k)
 
 void Magic::alg()
 {
-    int i;
-    int j;
+    int i,j;
     int n = degree;
-    int s;
-    int p;
-    int M = ((degree - 1) / 2);
-    row = (degree - 1);
-    col = (degree - 1);
+    int s; //счетчик
+    int p; //значение переменной
+    int M = ((degree - 1) / 2); // N = 2M+1 из условия
+    row = (degree - 1); //ряд квадрата
+    col = (degree - 1); //столбец квадрата
     
     for(s=0; s < n; s++)
-        tab[row-s][col-s] = M;   //заполняем главную диагональ
+        tab[row-s][col-s] = M*5;   //заполняем главную диагональ первого квадрата
     
-    for (p=degree-1; p>0; p--) //заполняем остальные диагонали
+    for (p=degree-1; p>0; p--) //заполняем остальные диагонали первого квадрата
+    {
         for(s=0; s < n; s++)
         {
             i = row-s+1;
@@ -87,11 +87,31 @@ void Magic::alg()
             reflect(j);
             if (p == M)
                 p--;
-            tab[i][j]=p;
+            tab[i][j]=p*5;
             
         }
     row++;
+    }
+    for(s=0; s < n; s++)
+        tab[row-s][s] += M+1; // складываем значения главной диагонали второго квадрата с соответствующими клетками первого квадрата
+    
+    for (p=1; p<degree; p++) // складываем значения остальных диагоналей второго квадрата с соответствующими клетками первого квадрата
+    {
+        for(s=0; s < n; s++)
+        {
+            i = row-s+1;
+            j = s;
+            reflect(i);
+            reflect(j);
+            if (p == M)
+                p--;
+            tab[i][j]+=p;
+            
+        }
+        row++;
+    }
 }
+
 
 int main(int argc, char* argv[])
 {
