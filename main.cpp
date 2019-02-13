@@ -15,6 +15,7 @@ public:
     void print();
     void alg();
     int reflect(int);
+    bool is_true();
 };
 
 Magic::Magic(int n)
@@ -83,16 +84,14 @@ void Magic::alg()
         {
             i = row-s+1;
             j = col-s;
-            reflect(i);
-            reflect(j);
             if (p == M)
                 p--;
-            tab[i][j]=p*5;
+            tab[reflect(i)][reflect(j)]=p*5;
             
         }
-    row++;
+        row++;
     }
-    for(s=0; s < n; s++)
+    for(s=0, row=degree-1; s < n; s++)
         tab[row-s][s] += M+1; // складываем значения главной диагонали второго квадрата с соответствующими клетками первого квадрата
     
     for (p=1; p<=degree; p++) // складываем значения остальных диагоналей второго квадрата с соответствующими клетками первого квадрата
@@ -101,25 +100,46 @@ void Magic::alg()
         {
             i = row-s+1;
             j = s;
-            reflect(i);
-            reflect(j);
-            if (p == M)
+            if (p == M+1)
                 p++;
-            tab[i][j]+=p;
+            tab[reflect(i)][reflect(j)]+=p;
             
         }
         row++;
     }
 }
 
+bool Magic::is_true()
+{
+    int sum = 0;
+    
+    for (int i = 0; i < degree; i++)
+    {
+        sum += tab[1][i];
+    }
+    
+    for (int i = 0; i < degree; i++)
+    {
+        int tempsum = 0;
+        for (int j = 0; j < degree; j++)
+        {
+            tempsum += tab[i][j];
+        }
+        
+        if (tempsum != sum)
+            return false;
+    }
+    
+    return true;
+}
 
 int main(int argc, char* argv[])
 {
     int n;
     std::cin >> n;
-    if(argc != 2)
-        return(puts("Usage: magic degree"));
-    n = atoi(argv[1]);
+    //if(argc != 2)
+     //   return(puts("Usage: magic degree"));
+   // n = atoi(argv[1]);
     if((n % 2) == 0)
     {
         puts("Usage: magic 5 (or 7, 11, 17, ...)");
@@ -128,5 +148,8 @@ int main(int argc, char* argv[])
     Magic mag(n);
     mag.alg();
     mag.print();
+    
+    if (mag.is_true())
+        std::cout << "The magic square is right.\n";
     return(n);
 }
